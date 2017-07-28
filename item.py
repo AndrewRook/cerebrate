@@ -1,7 +1,40 @@
 
 def create_item(mineral_cost, gas_cost, build_time, population_used, prerequisite_items,
-                items_consumed=None, population_generated=0, mineral_production_rate=0, gas_production_rate=0):
-    class TempClass(object):
+                items_consumed=None, population_required=None, population_generated=0,
+                mineral_production_rate=0, gas_production_rate=0):
+    """
+    Create a simple class to store information about a unit, building, or upgrade.
+
+    Parameters
+    ----------
+    mineral_cost : integer
+        The mineral cost of the item.
+    gas_cost : integer
+        The gas cost of the item.
+    build_time : number
+        How long it takes to build/research the item, in whatever unit is appropriate (frames, seconds, etc).
+    population_used : integer
+        The number of population used by the item. For buildings and upgrades this is usually 0.
+    prerequisite_items : list of Item classes
+        The units/buildings/upgrades required in order to be able to produce the unit.
+    items_consumed : list of Item classes, or ``None`` (default: ``None``)
+        If the unit/building/upgrade requires the sacrifice of one or more units
+        or buildings (e.g. Protoss Archons, Zerg buildings) list each of them. (Example:
+        For Archons this would be [high_templar, high_templar].)
+    population_required : integer or ``None`` (default: ``None``)
+        If the required population to construct the unit is different than the population used by the
+        created unit, enter it here. (Example: Archons use 4 population, but require zero available population
+        to create because the High Templar units already exist.)
+    population_generated : integer or 0 (default: 0)
+        If the unit/building generates population, how many units of population it generates.
+    mineral_production_rate : integer or 0 (default: 0)
+        If the unit/building is capable of proucing minerals, how many minerals it produces per time-step (must be in the
+        same time units as ``build_time``).
+    gas_production_rate : integer or 0 (default: 0)
+        Same as ``mineral_production_rate``, but for gas.
+    
+    """
+    class Item(object):
         def __init__(self, time_to_ready=0):
             self._mineral_cost = mineral_cost
             self._gas_cost = gas_cost
@@ -12,6 +45,10 @@ def create_item(mineral_cost, gas_cost, build_time, population_used, prerequisit
                 self._items_consumed = items_consumed
             else:
                 self._items_consumed = []
+            if population_required is None:
+                self._population_required = population_used
+            else:
+                self._poulation_required = population_required
             self._population_generated = population_generated
             self._mineral_production_rate = mineral_production_rate
             self._gas_production_rate = gas_production_rate
@@ -36,6 +73,9 @@ def create_item(mineral_cost, gas_cost, build_time, population_used, prerequisit
         @property
         def items_consumed(self):
             return self._items_consumed
+        @property
+        def population_required(self):
+            return self._population_required
         @property
         def population_generated(self):
             return self._population_generated
