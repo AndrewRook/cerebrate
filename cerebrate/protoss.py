@@ -1,4 +1,4 @@
-from item import create_item
+from cerebrate.item import create_item
 
 fps = 15 #~normal, see http://www.starcraftai.com/wiki/Frame_Rate
 
