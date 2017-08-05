@@ -22,4 +22,10 @@ class TestRandomlyChooseNextBuildItem(object):
         required = defaultdict(int, {pt.dragoon: 4})
         choice = bo.randomly_choose_next_build_item(existing, required, pt.builder)
         assert choice is pt.cybernetics_core
-        
+    @pytest.mark.skip(reason="TODO: code up this logic")
+    def test_consume_met(self):
+        pass
+    @pytest.mark.skip(reason="TODO: code up this logic")
+    def test_consume_not_met(self):
+        pass
+    
