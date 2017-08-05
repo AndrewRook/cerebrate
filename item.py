@@ -1,12 +1,14 @@
 
-def create_item(mineral_cost, gas_cost, build_time, population_used, prerequisite_items,
-                items_consumed=None, population_required=None, population_generated=0,
+def create_item(name, mineral_cost, gas_cost, build_time, population_used, prerequisite_items,
+                item_type, items_consumed=None, population_required=None, population_generated=0,
                 mineral_production_rate=0, gas_production_rate=0):
     """
     Create a simple class to store information about a unit, building, or upgrade.
 
     Parameters
     ----------
+    name : string
+        The prose name of the item.
     mineral_cost : integer
         The mineral cost of the item.
     gas_cost : integer
@@ -17,6 +19,8 @@ def create_item(mineral_cost, gas_cost, build_time, population_used, prerequisit
         The number of population used by the item. For buildings and upgrades this is usually 0.
     prerequisite_items : list of Item classes
         The units/buildings/upgrades required in order to be able to produce the unit.
+    item_type : string
+        The type of item, either "building", "unit", or "upgrade". 
     items_consumed : list of Item classes, or ``None`` (default: ``None``)
         If the unit/building/upgrade requires the sacrifice of one or more units
         or buildings (e.g. Protoss Archons, Zerg buildings) list each of them. (Example:
@@ -36,11 +40,13 @@ def create_item(mineral_cost, gas_cost, build_time, population_used, prerequisit
     """
     class Item(object):
         def __init__(self, time_to_ready=0):
+            self._name = name
             self._mineral_cost = mineral_cost
             self._gas_cost = gas_cost
             self._build_time = build_time
             self._population_used = population_used
             self._prerequisite_items = prerequisite_items
+            self.item_type = item_type
             if items_consumed is not None:
                 self._items_consumed = items_consumed
             else:
@@ -55,6 +61,9 @@ def create_item(mineral_cost, gas_cost, build_time, population_used, prerequisit
             
             self.time_to_ready = time_to_ready
 
+        @property
+        def name(self):
+            return self._name
         @property
         def mineral_cost(self):
             return self._mineral_cost
@@ -71,6 +80,14 @@ def create_item(mineral_cost, gas_cost, build_time, population_used, prerequisit
         def prerequisite_items(self):
             return self._prerequisite_items
         @property
+        def item_type(self):
+            return self._item_type
+        @item_type.setter
+        def item_type(self, value):
+            if value.lower() not in ["unit", "building", "upgrade"]:
+                raise ValueError("item_type must be one of unit, building, or upgrade")
+            self._item_type = value
+        @property
         def items_consumed(self):
             return self._items_consumed
         @property
@@ -86,7 +103,7 @@ def create_item(mineral_cost, gas_cost, build_time, population_used, prerequisit
         def gas_production_rate(self):
             return self._gas_production_rate
             
-    return TempClass
+    return Item
 
 if __name__ == "__main__":
     test = create_item(40, 0, 200, [])
