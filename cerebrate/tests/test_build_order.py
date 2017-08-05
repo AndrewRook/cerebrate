@@ -1,0 +1,25 @@
+from collections import defaultdict
+
+import pytest
+
+import cerebrate.build_order as bo
+import cerebrate.protoss as pt
+
+class TestRandomlyChooseNextBuildItem(object):
+    def test_prereqs_met(self):
+        existing = defaultdict(int, {pt.nexus: 1,
+                                     pt.pylon: 1,
+                                     pt.gateway: 1,
+                                     pt.cybernetics_core: 1})
+        required = defaultdict(int, {pt.dragoon: 4})
+        choice = bo.randomly_choose_next_build_item(existing, required, pt.builder)
+        assert choice is pt.dragoon
+    def test_prereqs_not_met(self):
+        existing = defaultdict(int, {pt.nexus: 1,
+                                     pt.pylon: 1,
+                                     pt.gateway: 1,
+                                     pt.probe: 1})
+        required = defaultdict(int, {pt.dragoon: 4})
+        choice = bo.randomly_choose_next_build_item(existing, required, pt.builder)
+        assert choice is pt.cybernetics_core
+        
