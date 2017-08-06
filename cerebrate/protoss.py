@@ -48,3 +48,11 @@ dark_archon = create_item("dark_archon", 0, 0, 20, 4, [], "unit", items_consumed
 
 #Designating special units:
 builder = probe
+
+
+#Providing a list of all buildings/units/upgrades:
+item_list = [nexus, pylon, assimilator, gateway, forge, photon_cannon, shield_battery,
+             cybernetics_core, robotics_facility, robotics_support_bay, observatory,
+             citadel_of_adun, templar_archives, stargate, fleet_beacon, arbiter_tribunal,
+             zealot, dragoon, high_templar, dark_templar, reaver, observer, shuttle, scout,
+             carrier, arbiter, corsair, archon, dark_archon]
