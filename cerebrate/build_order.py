@@ -1,8 +1,7 @@
 from collections import defaultdict
 import random
 
-def make_random_build_order(existing_stuff_dict, required_stuff_dict, builder_unit):
-    #TODO (AndrewRook): Figure out how to factor in population
+def make_random_build_order(existing_stuff_dict, required_stuff_dict, builder_unit, population_item):
     internal_existing_stuff_dict = existing_stuff_dict.copy()
     internal_required_stuff_dict = required_stuff_dict.copy()
 
@@ -15,7 +14,7 @@ def make_random_build_order(existing_stuff_dict, required_stuff_dict, builder_un
     while len(internal_required_stuff_dict) > 0:
         next_build_item = randomly_choose_next_build_item(internal_existing_stuff_dict,
                                                           internal_required_stuff_dict,
-                                                          builder_unit)
+                                                          builder_unit, population_item)
         build_order.append(next_build_item)
         internal_existing_stuff_dict[next_build_item] += 1
         internal_required_stuff_dict[next_build_item] -= 1
@@ -27,7 +26,7 @@ def make_random_build_order(existing_stuff_dict, required_stuff_dict, builder_un
 
     return build_order
 
-def randomly_choose_next_build_item(existing_stuff_dict, required_stuff_dict, builder_unit):
+def randomly_choose_next_build_item(existing_stuff_dict, required_stuff_dict, builder_unit, population_item):
     try:
         chosen_class = random.choice([key for key in required_stuff_dict if required_stuff_dict[key] > 0])
     except IndexError:
@@ -46,6 +45,15 @@ def randomly_choose_next_build_item(existing_stuff_dict, required_stuff_dict, bu
         if existing_stuff_dict[requirement] < requirements[requirement]:
             missing_requirements[requirement] = requirements[requirement]
     if len(missing_requirements) == 0:
-        return chosen_class
+        #Now check population:
+        if chosen_instance.population_required > 0:
+            available_population = sum([existing_stuff_dict[item] * (item().population_generated - item().population_used)
+                                      for item in existing_stuff_dict])
+            if chosen_instance.population_required <= available_population:
+                return chosen_class
+            else:
+                return population_item
+        else:
+            return chosen_class
     else:
-        return randomly_choose_next_build_item(existing_stuff_dict, missing_requirements, builder_unit)
+        return randomly_choose_next_build_item(existing_stuff_dict, missing_requirements, builder_unit, population_item)
