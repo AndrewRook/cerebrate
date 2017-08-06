@@ -1,6 +1,27 @@
 from collections import defaultdict
 import random
 
+def validate_build_order(existing_items, build_order):
+    existing_items = existing_items.copy()
+    available_population = sum([existing_items[item] * (item().population_generated - item().population_used)
+                                for item in existing_items])
+    for item in build_order:
+        item_instance = item()
+        if available_population < item_instance.population_required and item_instance.population_required > 0:
+            return False
+        for prereq in item_instance.prerequisite_items:
+            if prereq not in existing_items:
+                return False
+        for consumable in item_instance.items_consumed:
+            if existing_items[consumable] <= 0:
+                return False
+            existing_items[consumable] -= 1
+            available_population += consumable().population_used
+        available_population += item_instance.population_generated
+        available_population -= item_instance.population_used
+        existing_items[item] += 1
+    return True
+
 def make_random_build_order(existing_stuff_dict, required_stuff_dict, builder_unit, population_item):
     internal_existing_stuff_dict = existing_stuff_dict.copy()
     internal_required_stuff_dict = required_stuff_dict.copy()
@@ -22,7 +43,8 @@ def make_random_build_order(existing_stuff_dict, required_stuff_dict, builder_un
         #or wasn't in the original requirements (i.e. an implicit prerequisite), delete it:
         if internal_required_stuff_dict[next_build_item] <= 0:
             del internal_required_stuff_dict[next_build_item]
-        #TODO (AndrewRook): add code to remove any consumed items
+        for item in next_build_item().items_consumed:
+            internal_existing_stuff_dict[item] -= 1
 
     return build_order
 
