@@ -32,16 +32,19 @@ def randomly_choose_next_build_item(existing_stuff_dict, required_stuff_dict, bu
     except IndexError:
         return None
     chosen_instance = chosen_class()
-    prerequisites = chosen_instance.prerequisite_items
-    if chosen_instance.item_type == "building" and builder_unit not in prerequisites:
-        prerequisites.append(builder_unit)
-    #TODO (AndrewRook): Figure out how to include consumed items - need to also bolster loop
-    #to count exact number of available units to be consumed
-    missing_prerequisites = defaultdict(lambda: 0)
-    for prerequisite in prerequisites:
-        if existing_stuff_dict[prerequisite] <= 0:
-            missing_prerequisites[prerequisite] += 1
-    if len(missing_prerequisites) == 0:
+    requirements = defaultdict(int, {})
+    for consumed_item in chosen_instance.items_consumed:
+        requirements[consumed_item] += 1
+    for prerequisite in chosen_instance.prerequisite_items:
+        if prerequisite not in requirements:
+            requirements[prerequisite] = 1
+    if chosen_instance.item_type == "building" and builder_unit not in requirements:
+        requirements[builder_unit] = 1
+    missing_requirements = defaultdict(int)
+    for requirement in requirements:
+        if existing_stuff_dict[requirement] < requirements[requirement]:
+            missing_requirements[requirement] = requirements[requirement]
+    if len(missing_requirements) == 0:
         return chosen_class
     else:
-        return randomly_choose_next_build_item(existing_stuff_dict, missing_prerequisites, builder_unit)
+        return randomly_choose_next_build_item(existing_stuff_dict, missing_requirements, builder_unit)
