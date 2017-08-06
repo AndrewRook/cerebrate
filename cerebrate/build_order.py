@@ -27,7 +27,10 @@ def make_random_build_order(existing_stuff_dict, required_stuff_dict, builder_un
     return build_order
 
 def randomly_choose_next_build_item(existing_stuff_dict, required_stuff_dict, builder_unit):
-    chosen_class = random.choice(list(required_stuff_dict))
+    try:
+        chosen_class = random.choice([key for key in required_stuff_dict if required_stuff_dict[key] > 0])
+    except IndexError:
+        return None
     chosen_instance = chosen_class()
     prerequisites = chosen_instance.prerequisite_items
     if chosen_instance.item_type == "building" and builder_unit not in prerequisites:
