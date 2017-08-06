@@ -26,8 +26,8 @@ def make_random_build_order(existing_stuff_dict, required_stuff_dict, builder_un
     internal_existing_stuff_dict = existing_stuff_dict.copy()
     internal_required_stuff_dict = required_stuff_dict.copy()
 
-    #Pruning anything that was input as zero in the requirements defaultdict: 
-    for key in internal_required_stuff_dict:
+    #Pruning anything that was input as zero in the requirements defaultdict:
+    for key in list(internal_required_stuff_dict.keys()): #iterating over raw keys raises runtime error because dict is mutated
         if internal_required_stuff_dict[key] <= 0:
             del internal_required_stuff_dict[key]
     

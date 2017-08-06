@@ -52,6 +52,20 @@ class TestValidateBuildOrder(object):
         assert bo.validate_build_order(existing, order) is False
         order = [pt.pylon] * 3 + order
         assert bo.validate_build_order(existing, order) is True
+
+
+class TestMakeRandomBuildOrder(object):
+    def test_works_no_requirements(self):
+        existing = defaultdict(int)
+        required = defaultdict(int)
+        assert len(bo.make_random_build_order(existing, required, pt.builder, pt.population_generator)) == 0
+    def test_works_some_requirements_zero(self):
+        existing = defaultdict(int, {pt.probe: 1})
+        required = defaultdict(int, {pt.nexus: 1,
+                                     pt.gateway: 1,
+                                     pt.zealot: 0})
+        assert (bo.make_random_build_order(existing, required, pt.builder, pt.population_generator) ==
+                [pt.pylon, pt.nexus, pt.gateway])
         
 
 class TestRandomlyChooseNextBuildItem(object):
