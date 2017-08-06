@@ -54,7 +54,7 @@ def create_item(name, mineral_cost, gas_cost, build_time, population_used, prere
             if population_required is None:
                 self._population_required = population_used
             else:
-                self._poulation_required = population_required
+                self._population_required = population_required
             self._population_generated = population_generated
             self._mineral_production_rate = mineral_production_rate
             self._gas_production_rate = gas_production_rate
