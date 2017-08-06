@@ -2,6 +2,7 @@ from collections import defaultdict
 import random
 
 def make_random_build_order(existing_stuff_dict, required_stuff_dict, builder_unit):
+    #TODO (AndrewRook): Figure out how to factor in population
     internal_existing_stuff_dict = existing_stuff_dict.copy()
     internal_required_stuff_dict = required_stuff_dict.copy()
 

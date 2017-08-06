@@ -43,8 +43,8 @@ scout = create_item("scout", 275, 125, 80, 3, [stargate, pylon], "unit")
 carrier = create_item("carrier", 350, 250, 140, 6, [stargate, fleet_beacon, pylon], "unit")
 arbiter = create_item("arbiter", 100, 350, 160, 4, [stargate, arbiter_tribunal, pylon], "unit")
 corsair = create_item("corsair", 150, 100, 40, 2, [stargate, pylon], "unit")
-#archon = create_item(0, 0, 20, 4, [
-#dark_archon
+archon = create_item("archon", 0, 0, 20, 4, [], "unit", items_consumed=[high_templar, high_templar], population_required=0)
+dark_archon = create_item("dark_archon", 0, 0, 20, 4, [], "unit", items_consumed=[dark_templar, dark_templar], population_required=0)
 
 #Designating special units:
 builder = probe

@@ -22,12 +22,35 @@ class TestRandomlyChooseNextBuildItem(object):
         required = defaultdict(int, {pt.dragoon: 4})
         choice = bo.randomly_choose_next_build_item(existing, required, pt.builder)
         assert choice is pt.cybernetics_core
-    @pytest.mark.skip(reason="TODO (AndrewRook): code up this logic in the function itself")
+    def test_prereqs_really_not_met(self):
+        existing = defaultdict(int, {pt.nexus: 1,
+                                     pt.pylon: 1,
+                                     pt.probe: 1})
+        required = defaultdict(int, {pt.scout: 4})
+        choice = bo.randomly_choose_next_build_item(existing, required, pt.builder)
+        assert choice is pt.gateway
     def test_consume_met(self):
-        pass
-    @pytest.mark.skip(reason="TODO (AndrewRook): code up this logic in the function itself")
+        existing = defaultdict(int, {pt.high_templar: 3})
+        required = defaultdict(int, {pt.archon: 1})
+        choice = bo.randomly_choose_next_build_item(existing, required, pt.builder)
+        assert choice is pt.archon
+    def test_consume_partially_met(self):
+        existing = defaultdict(int, {pt.pylon: 1,
+                                     pt.gateway: 1,
+                                     pt.citadel_of_adun: 1,
+                                     pt.templar_archives: 1,
+                                     pt.high_templar: 1})
+        required = defaultdict(int, {pt.archon: 1})
+        choice = bo.randomly_choose_next_build_item(existing, required, pt.builder)
+        assert choice is pt.high_templar
     def test_consume_not_met(self):
-        pass
+        existing = defaultdict(int, {pt.pylon: 1,
+                                     pt.gateway: 1,
+                                     pt.citadel_of_adun: 1,
+                                     pt.templar_archives: 1})
+        required = defaultdict(int, {pt.archon: 1})
+        choice = bo.randomly_choose_next_build_item(existing, required, pt.builder)
+        assert choice is pt.high_templar
     def test_existing_prereq_set_to_zero(self):
         existing = defaultdict(int, {pt.nexus: 1,
                                      pt.pylon: 1,
