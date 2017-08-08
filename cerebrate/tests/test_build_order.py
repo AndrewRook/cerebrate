@@ -1,3 +1,5 @@
+import random
+
 from collections import defaultdict
 
 import pytest
@@ -55,18 +57,63 @@ class TestValidateBuildOrder(object):
 
 
 class TestMakeRandomBuildOrder(object):
+    # @staticmethod
+    # def make_random_items(num_items, possible_items):
+    #     items = defaultdict(int)
+    #     for i in range(num_items):
+    #         random_item = random.choice(possible_items)
+    #         items[random_item] += 1
+    #     return items
+    
     def test_works_no_requirements(self):
         existing = defaultdict(int)
         required = defaultdict(int)
         assert len(bo.make_random_build_order(existing, required, pt.builder, pt.population_generator)) == 0
     def test_works_some_requirements_zero(self):
-        existing = defaultdict(int, {pt.probe: 1})
+        existing = defaultdict(int, {pt.probe: 1, pt.pylon: 1})
         required = defaultdict(int, {pt.nexus: 1,
-                                     pt.gateway: 1,
+                                     pt.gateway: 2,
                                      pt.zealot: 0})
         assert (bo.make_random_build_order(existing, required, pt.builder, pt.population_generator) ==
-                [pt.pylon, pt.nexus, pt.gateway])
-        
+                [pt.nexus, pt.gateway, pt.gateway])
+    
+    from hypothesis import given
+    import hypothesis.strategies as st
+    @given(st.random_module(),
+           st.lists(elements=st.integers(min_value=0, max_value=len(pt.item_list)-1), min_size=0, max_size=60),
+           st.lists(elements=st.integers(min_value=0, max_value=len(pt.item_list)-1), min_size=0, max_size=40))
+    def test_build_orders_are_valid_protoss(self, seed, existing_indices_list, required_indices_list):
+        existing = defaultdict(int)
+        for i in existing_indices_list:
+            existing[pt.item_list[i]] += 1
+        required = defaultdict(int)
+        for i in required_indices_list:
+            required[pt.item_list[i]] += 1
+        print("Existing:\n-----------")
+        for key in existing:
+            print(key().name, existing[key])
+        print("Required:\n-----------")
+        for key in required:
+            print(key().name, required[key])
+        print("\n\n")
+        build_order = bo.make_random_build_order(existing, required, pt.builder, pt.population_generator)
+        assert bo.validate_build_order(existing, build_order)
+    # def test_build_orders_are_valid(self, existing_list, required_list):
+    #     existing = defaultdict(int)
+    #     for item in existing_list:
+    #         existing[item] += 1
+    #     required = defaultdict(int)
+    #     for item in required_list:
+    #         required[item] += 1
+    #     build_order = bo.make_random_build_order(existing, required, pt.builder, pt.population_generator)
+    #     assert bo.validate_build_order(build_order)
+
+# from hypothesis import given
+# import hypothesis.strategies as st
+# @given(st.lists(elements=[1, 2, 3], min_size=0, max_size=5))
+# def test_woo(test_list):
+#     print(test_list)
+#     assert len(test_list) > 0
 
 class TestRandomlyChooseNextBuildItem(object):
     def test_prereqs_met(self):
