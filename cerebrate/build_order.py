@@ -48,11 +48,13 @@ def make_random_build_order(existing_stuff_dict, required_stuff_dict, builder_un
 
     return build_order
 
-def randomly_choose_next_build_item(existing_stuff_dict, required_stuff_dict, builder_unit, population_item):
+def randomly_choose_next_build_item(existing_stuff_dict, required_stuff_dict, builder_unit, population_item, attempted_items=None):
     try:
         chosen_class = random.choice([key for key in required_stuff_dict if required_stuff_dict[key] > 0])
     except IndexError:
         return None
+    if attempted_items is None:
+        attempted_items = set()
     chosen_instance = chosen_class()
     requirements = defaultdict(int, {})
     for consumed_item in chosen_instance.items_consumed:
@@ -78,4 +80,8 @@ def randomly_choose_next_build_item(existing_stuff_dict, required_stuff_dict, bu
         else:
             return chosen_class
     else:
-        return randomly_choose_next_build_item(existing_stuff_dict, missing_requirements, builder_unit, population_item)
+        if chosen_class in attempted_items:
+            raise ValueError("No valid prerequisites to build next")
+        attempted_items.add(chosen_class)
+        return randomly_choose_next_build_item(existing_stuff_dict, missing_requirements, builder_unit,
+                                               population_item, attempted_items=attempted_items)
