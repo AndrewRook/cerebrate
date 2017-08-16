@@ -1,7 +1,7 @@
 
 def create_item(name, mineral_cost, gas_cost, build_time, population_used, prerequisite_items,
                 item_type, items_consumed=None, population_required=None, population_generated=0,
-                mineral_production_rate=0, gas_production_rate=0):
+                produced_at=None, mineral_production_rate=0, gas_production_rate=0):
     """
     Create a simple class to store information about a unit, building, or upgrade.
 
@@ -31,6 +31,8 @@ def create_item(name, mineral_cost, gas_cost, build_time, population_used, prere
         to create because the High Templar units already exist.)
     population_generated : integer or 0 (default: 0)
         If the unit/building generates population, how many units of population it generates.
+    produced_at : Item class or ``None`` (default: ``None``)
+        For units and upgrades, the building that they are produced at. 
     mineral_production_rate : integer or 0 (default: 0)
         If the unit/building is capable of proucing minerals, how many minerals it produces per time-step (must be in the
         same time units as ``build_time``).
@@ -56,6 +58,7 @@ def create_item(name, mineral_cost, gas_cost, build_time, population_used, prere
             else:
                 self._population_required = population_required
             self._population_generated = population_generated
+            self._produced_at = produced_at
             self._mineral_production_rate = mineral_production_rate
             self._gas_production_rate = gas_production_rate
             
@@ -96,6 +99,9 @@ def create_item(name, mineral_cost, gas_cost, build_time, population_used, prere
         @property
         def population_generated(self):
             return self._population_generated
+        @property
+        def produced_at(self):
+            return self.produced_at
         @property
         def mineral_production_rate(self):
             return self._mineral_production_rate

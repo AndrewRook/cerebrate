@@ -30,19 +30,22 @@ vespene_generator = assimilator
 #production rates from Churchill & Buro 2011
 #(http://ai.cs.unibas.ch/research/reading_group/churchill-buro-aiide2011.pdf)
 probe = create_item("probe", 50, 0, 20, 1, [nexus], "unit",
+                    produced_at=nexus,
                     mineral_production_rate=0.045 * fps,
                     gas_production_rate=0.07 * fps)
-zealot = create_item("zealot", 100, 0, 40, 2, [gateway, pylon], "unit")
-dragoon = create_item("dragoon", 125, 50, 50, 2, [gateway, cybernetics_core, pylon], "unit")
-high_templar = create_item("high_templar", 50, 150, 50, 2, [gateway, templar_archives, pylon], "unit")
-dark_templar = create_item("dark_templar", 125, 100, 50, 2, [gateway, templar_archives, pylon], "unit")
-reaver = create_item("reaver", 200, 100, 70, 4, [robotics_facility, robotics_support_bay, pylon], "unit")
-observer = create_item("observer", 25, 75, 40, 1, [robotics_facility, observatory, pylon], "unit")
-shuttle = create_item("shuttle", 200, 0, 60, 2, [robotics_facility, pylon], "unit")
-scout = create_item("scout", 275, 125, 80, 3, [stargate, pylon], "unit")
-carrier = create_item("carrier", 350, 250, 140, 6, [stargate, fleet_beacon, pylon], "unit")
-arbiter = create_item("arbiter", 100, 350, 160, 4, [stargate, arbiter_tribunal, pylon], "unit")
-corsair = create_item("corsair", 150, 100, 40, 2, [stargate, pylon], "unit")
+zealot = create_item("zealot", 100, 0, 40, 2, [gateway, pylon], "unit", produced_at=gateway)
+dragoon = create_item("dragoon", 125, 50, 50, 2, [gateway, cybernetics_core, pylon], "unit", produced_at=gateway)
+high_templar = create_item("high_templar", 50, 150, 50, 2, [gateway, templar_archives, pylon], "unit", produced_at=gateway)
+dark_templar = create_item("dark_templar", 125, 100, 50, 2, [gateway, templar_archives, pylon], "unit", produced_at=gateway)
+reaver = create_item("reaver", 200, 100, 70, 4, [robotics_facility, robotics_support_bay, pylon], "unit",
+                     produced_at=robotics_facility)
+observer = create_item("observer", 25, 75, 40, 1, [robotics_facility, observatory, pylon], "unit",
+                       produced_at=robotics_facility)
+shuttle = create_item("shuttle", 200, 0, 60, 2, [robotics_facility, pylon], "unit", produced_at=robotics_facility)
+scout = create_item("scout", 275, 125, 80, 3, [stargate, pylon], "unit", produced_at=stargate)
+carrier = create_item("carrier", 350, 250, 140, 6, [stargate, fleet_beacon, pylon], "unit", produced_at=stargate)
+arbiter = create_item("arbiter", 100, 350, 160, 4, [stargate, arbiter_tribunal, pylon], "unit", produced_at=stargate)
+corsair = create_item("corsair", 150, 100, 40, 2, [stargate, pylon], "unit", produced_at=stargate)
 archon = create_item("archon", 0, 0, 20, 4, [], "unit", items_consumed=[high_templar, high_templar], population_required=0)
 dark_archon = create_item("dark_archon", 0, 0, 20, 4, [], "unit", items_consumed=[dark_templar, dark_templar], population_required=0)
 
